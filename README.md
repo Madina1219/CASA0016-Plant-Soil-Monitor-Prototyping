@@ -10,44 +10,44 @@ Tomatoes are sensitive to inconsistent watering. This project solves that proble
 4.  **Protects** the hardware by sensing low water levels in the reservoir.
 
 ## 🧰 Hardware Components
-* [cite_start]**Microcontroller:** Arduino Uno [cite: 16]
-* **Sensors:**
-    * [cite_start]Capacitive Soil Moisture Sensor [cite: 23]
-    * [cite_start]Water Level Sensor [cite: 70]
+* **Microcontroller:** Arduino Uno
+* * **Sensors:**
+    *Capacitive Soil Moisture Sensor
+    *Water Level Sensor
 * **Actuators:**
-    * [cite_start]5V Relay Module [cite: 46]
-    * [cite_start]Submersible Water Pump [cite: 56]
-* [cite_start]**Display:** LCD1602 RGB Module (I2C) [cite: 33]
+  *5V Relay Module
+  *Submersible Water Pump
+* **Display:** LCD1602 RGB Module (I2C)
 * **Power:**
     * 9V/USB for Arduino Logic
-    * [cite_start]External Battery Pack for Pump [cite: 63]
-* [cite_start]**Enclosure:** Repurposed plastic tool caddy (chosen for water resistance and portability) 
+    * External Battery Pack for Pump
+  * **Enclosure:** Repurposed plastic tool caddy (chosen for water resistance and portability) 
 
 ## ⚡ Circuit Wiring
 The system uses a split power supply: the Arduino powers the sensors and screen (5V), while the battery pack powers the pump via the relay.
 
 | Component | Pin | Arduino/Connection | Function |
 | :--- | :--- | :--- | :--- |
-| **Soil Sensor** | AOUT | [cite_start]A0 [cite: 31] | Sends moisture readings |
-| **Water Level** | Signal | [cite_start]A1 [cite: 78] | Sends tank level readings |
-| **LCD Screen** | SDA | [cite_start]A4 (or SDA) [cite: 41] | I2C Data |
-| **LCD Screen** | SCL | [cite_start]A5 (or SCL) [cite: 44] | I2C Clock |
-| **Relay** | IN | [cite_start]Digital Pin 7 [cite: 54] | Triggers Pump |
-| **Pump (+)** | Red | [cite_start]Battery (+) [cite: 58] | Direct Power |
-| **Pump (-)** | Black | [cite_start]Relay COM [cite: 61] | Switched Ground |
+| **Soil Sensor** | AOUT | A0  | Sends moisture readings |
+| **Water Level** | Signal | A1  | Sends tank level readings |
+| **LCD Screen** | SDA | A4 (or SDA) | I2C Data |
+| **LCD Screen** | SCL |A5 (or SCL) | I2C Clock |
+| **Relay** | IN | Digital Pin 7  | Triggers Pump |
+| **Pump (+)** | Red | Battery (+) | Direct Power |
+| **Pump (-)** | Black | Relay COM  | Switched Ground |
 
 ## ⚙️ Configuration & Calibration
 The system logic is based on calibrated analog readings mapped to a 0-100% scale. These values can be adjusted in the code based on your specific soil type.
 
 **Current Thresholds:**
-* [cite_start]**Dry Soil (Trigger):** `< 20%` (Activates Pump) [cite: 88]
-* [cite_start]**Overwatered Warning:** `> 70%` [cite: 89]
-* [cite_start]**Low Water Tank:** `< 20%` (Prevents Pump activation) [cite: 90]
+* **Dry Soil (Trigger):** `< 20%` (Activates Pump) 
+* **Overwatered Warning:** `> 70%`
+* **Low Water Tank:** `< 20%` (Prevents Pump activation) 
 
 **Calibration Values:**
 ```cpp
 // Sensor Calibration (Analog 0-1023)
-const int SOIL_RAW_DRY = 900;   // Reading in air [cite: 83]
-const int SOIL_RAW_WET = 300;   // Reading in water [cite: 84]
-const int WATER_RAW_EMPTY = 0;  // Empty tank [cite: 85]
-const int WATER_RAW_FULL = 650; // Full tank [cite: 86]
+const int SOIL_RAW_DRY = 900;   // Reading in air
+const int SOIL_RAW_WET = 300;   // Reading in water
+const int WATER_RAW_EMPTY = 0;  // Empty tank 
+const int WATER_RAW_FULL = 650; // Full tank 
