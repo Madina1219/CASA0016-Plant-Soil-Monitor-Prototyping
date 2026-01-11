@@ -1,0 +1,8 @@
+01:37:45.034 -> : NOO | Pump: OFF
+  01:37:45.034 -> Soil: 689 | Water: 629 | Dry: NO | Pump: OFF
+  01:37:45.034 -> Soil: 692 | Water: 629 | Dry: NO | Pump: OFF
+  01:37:45.034 -> Soil: 689 | Wate===== DEMO MODE ACTIVE =====
+  01:37:49.046 -> Soil > 750 = DRY (pump water)
+  01:37:49.061 -> Soil < 600 = GOOD (stop pump)
+  01:37:49.094 -> Soil < 450 = OVERWATERED (stop pump)
+  01:37:49.127 -> Pump: 0.2s ON, 0.5s OFF

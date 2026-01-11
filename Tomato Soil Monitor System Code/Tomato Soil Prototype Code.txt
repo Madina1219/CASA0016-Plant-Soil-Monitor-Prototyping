@@ -1,0 +1,164 @@
+#include <Wire.h>
+#include <Waveshare_LCD1602_RGB.h>
+
+Waveshare_LCD1602_RGB lcd(16, 2);
+
+// ----- PINS -----
+const int soilSensorPin = A0;    // Capacitive soil moisture sensor
+const int waterLevelPin = A1;     // Water level sensor (display only)
+const int relayPin = 7;           // Relay control pin
+
+// ----- SOIL MOISTURE THRESHOLDS -----
+// Current readings: Dry soil = 784-786
+const int SOIL_DRY_THRESHOLD = 750;      // ABOVE this = dry soil, pump water
+const int SOIL_WET_THRESHOLD = 600;      // BELOW this = good moisture, stop pump
+const int SOIL_OVERWATERED = 450;        // BELOW this = overwatered, stop pump
+
+// ----- WATER LEVEL THRESHOLDS (DISPLAY ONLY) -----
+const int WATER_PRESENT_THRESHOLD = 400; // ABOVE this = water in tank
+
+// ----- RELAY LOGIC -----
+const int RELAY_ON = HIGH;   // Change to LOW if your relay is active-low
+const int RELAY_OFF = LOW;
+
+// ----- PUMP CONTROL -----
+bool isPumping = false;
+unsigned long lastPumpToggle = 0;
+
+const unsigned long PUMP_ON_TIME = 200;   // Pump ON for 0.2 seconds
+const unsigned long PUMP_OFF_TIME = 500;  // Pump OFF for 0.5 seconds
+
+// ----- LCD STATE TRACKING -----
+String currentLine1 = "";
+String currentLine2 = "";
+
+// ----- SENSOR READING FUNCTION -----
+int readSensor(int pin) {
+  long sum = 0;
+  for (int i = 0; i < 5; i++) {
+    sum += analogRead(pin);
+    delay(10);
+  }
+  return sum / 5;
+}
+
+void updateLCD(String line1, String line2) {
+  if (line1 != currentLine1 || line2 != currentLine2) {
+    lcd.clear();
+    
+    lcd.setCursor(0, 0);
+    lcd.send_string(line1.c_str());
+    
+    lcd.setCursor(0, 1);
+    lcd.send_string(line2.c_str());
+    
+    currentLine1 = line1;
+    currentLine2 = line2;
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+  
+  pinMode(relayPin, OUTPUT);
+  digitalWrite(relayPin, RELAY_OFF);  // Pump OFF at startup
+  
+  lcd.init();
+  lcd.setRGB(200, 200, 255);  // Bright blue-white backlight
+  
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.send_string("Tomato Monitor");
+  lcd.setCursor(0, 1);
+  lcd.send_string("Demo Ready!");
+  delay(2000);
+  
+  Serial.println("===== DEMO MODE ACTIVE =====");
+  Serial.println("Soil > 750 = DRY (pump water)");
+  Serial.println("Soil < 600 = GOOD (stop pump)");
+  Serial.println("Soil < 450 = OVERWATERED (stop pump)");
+  Serial.println("Pump: 0.2s ON, 0.5s OFF");
+  Serial.println("============================");
+  
+  lastPumpToggle = millis();  // Initialize timer
+}
+
+void loop() {
+  unsigned long now = millis();
+  
+  // ----- READ SENSORS -----
+  int soilMoisture = readSensor(soilSensorPin);
+  int waterLevel = readSensor(waterLevelPin);
+  
+  // ----- DETERMINE SOIL STATUS -----
+  String soilStatus = "";
+  bool soilIsDry = false;
+  
+  if (soilMoisture > SOIL_DRY_THRESHOLD) {
+    // Soil is DRY - need water
+    soilStatus = "Soil Dry,H2O Now";
+    soilIsDry = true;
+  } else if (soilMoisture < SOIL_OVERWATERED) {
+    // Soil is OVERWATERED
+    soilStatus = "Soil Not Ok,Over";
+    soilIsDry = false;
+  } else {
+    // Soil is GOOD
+    soilStatus = "Soil Ok,No H2O";
+    soilIsDry = false;
+  }
+  
+  // ----- DETERMINE WATER TANK STATUS (INDEPENDENT) -----
+  String tankStatus = "";
+  if (waterLevel > WATER_PRESENT_THRESHOLD) {
+    tankStatus = "Tank OK";
+  } else {
+    tankStatus = "Refill Tank";
+  }
+  
+  // ----- PUMP CONTROL (ONLY WHEN SOIL IS DRY) -----
+  if (soilIsDry) {
+    // Soil is dry - pulse the pump (0.2s ON, 0.5s OFF)
+    unsigned long timeSinceToggle = now - lastPumpToggle;
+    
+    if (isPumping) {
+      // Pump is ON - check if 0.2 seconds passed
+      if (timeSinceToggle >= PUMP_ON_TIME) {
+        digitalWrite(relayPin, RELAY_OFF);
+        isPumping = false;
+        lastPumpToggle = now;
+        Serial.println("  -> Pump OFF (0.5s pause)");
+      }
+    } else {
+      // Pump is OFF - check if 0.5 seconds passed
+      if (timeSinceToggle >= PUMP_OFF_TIME) {
+        digitalWrite(relayPin, RELAY_ON);
+        isPumping = true;
+        lastPumpToggle = now;
+        Serial.println("  -> Pump ON (0.2s burst)");
+      }
+    }
+  } else {
+    // Soil is NOT dry - ensure pump is completely OFF
+    digitalWrite(relayPin, RELAY_OFF);
+    if (isPumping) {
+      isPumping = false;
+      Serial.println(">>> PUMP STOPPED - Soil is wet/overwatered");
+    }
+  }
+  
+  // ----- UPDATE LCD DISPLAY -----
+  updateLCD(soilStatus, tankStatus);
+  
+  // ----- SERIAL DEBUG OUTPUT -----
+  Serial.print("Soil: ");
+  Serial.print(soilMoisture);
+  Serial.print(" | Water: ");
+  Serial.print(waterLevel);
+  Serial.print(" | Dry: ");
+  Serial.print(soilIsDry ? "YES" : "NO");
+  Serial.print(" | Pump: ");
+  Serial.println(isPumping ? "ON" : "OFF");
+  
+  delay(100);  // Very fast response for demo
+}

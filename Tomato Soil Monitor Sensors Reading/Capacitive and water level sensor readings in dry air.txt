@@ -1,0 +1,26 @@
+01:30:54.694 -> ===== DEMO MODE ACTIVE =====
+  01:30:54.726 -> Soil > 750 = DRY (pump water)
+  01:30:54.759 -> Soil < 600 = GOOD (stop pump)
+  01:30:54.790 -> Soil < 450 = OVERWATERED (stop pump)
+  01:30:54.824 -> Pump: 0.2s ON, 0.5s OFF
+  01:30:54.857 -> ============================
+  01:30:55.222 -> Soil: 764 | Water: 10 | Dry: YES | Pump: OFF
+  01:30:55.426 ->   -> Pump ON (0.2s burst)
+  01:30:55.459 -> Soil: 763 | Water: 10 | Dry: YES | Pump: ON
+  01:30:55.627 ->   -> Pump OFF (0.5s pause)
+  01:30:55.660 -> Soil: 801 | Water: 2 | Dry: YES | Pump: OFF
+  01:30:55.848 -> Soil: 792 | Water: 10 | Dry: YES | Pump: OFF
+  01:30:56.065 -> Soil: 766 | Water: 10 | Dry: YES | Pump: OFF
+  01:30:56.242 ->   -> Pump ON (0.2s burst)
+  01:30:56.274 -> Soil: 764 | Water: 10 | Dry: YES | Pump: ON
+  01:30:56.480 ->   -> Pump OFF (0.5s pause)
+  01:30:56.480 -> Soil: 800 | Water: 2 | Dry: YES | Pump: OFF
+  01:30:56.668 -> Soil: 791 | Water: 10 | Dry: YES | Pump: OFF
+  01:30:56.864 -> Soil: 765 | Water: 10 | Dry: YES | Pump: OFF
+  01:30:57.061 ->   -> Pump ON (0.2s burst)
+  01:30:57.093 -> Soil: 764 | Water: 9 | Dry: YES | Pump: ON
+  01:30:57.298 ->   -> Pump OFF (0.5s pause)
+  01:30:57.299 -> Soil: 801 | Water: 2 | Dry: YES | Pump: OFF
+  01:30:57.500 -> Soil: 791 | Water: 9 | Dry: YES | Pump: OFF
+  01:30:57.712 -> Soil: 766 | Water: 10 | Dry: YES | Pump: OFF
+  01:30:57.906 ->   -> Pump ON (0.2s burst)
