@@ -13,7 +13,7 @@ The system continuously monitors soil moisture, displays live status feedback, a
 
 A short demonstration video showing live sensor readings, pump activation, and LCD feedback during testing is available below:
 
-▶ System testing video:
+▶ System testing video:https://github.com/Madina1219/CASA0016-Plant-Soil-Monitor-Prototyping/blob/main/Tomato%20Soil%20Monitor%20Prototype%20Images/System%20Testing%20.zip
 
 
 🎯 Project Objectives
