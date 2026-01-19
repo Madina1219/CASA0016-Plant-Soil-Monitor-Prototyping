@@ -80,12 +80,12 @@ Operating Thresholds:
 
 Calibration Values (Example)
 // Soil sensor calibration
-const int SOIL_RAW_DRY = 900;   // Sensor in air
-const int SOIL_RAW_WET = 300;   // Sensor in water
+.const int SOIL_RAW_DRY = 900;   // Sensor in air
+.const int SOIL_RAW_WET = 300;   // Sensor in water
 
 // Water level sensor calibration
-const int WATER_RAW_EMPTY = 0;  
-const int WATER_RAW_FULL  = 650;
+.const int WATER_RAW_EMPTY = 0;  
+.const int WATER_RAW_FULL  = 650;
 
 These values should be recalibrated based on soil type, sensor variation, and container size.
 
